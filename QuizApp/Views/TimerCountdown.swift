@@ -8,22 +8,15 @@
 import SwiftUI
 
 struct TimerCountdown: View {
-    
-    @State private var currentScore = 1.0
-    
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    @ObservedObject var vm: QuizEngineVM
+
     var body: some View {
-        ProgressView(value: currentScore)
-            .onReceive(timer) { _ in 
-                if currentScore > 0 {
-                    currentScore -= 0.01
-                }
-            }
+        ProgressView(value: Float(vm.score), total: 1000.0)
     }
 }
 
 struct TimerCountdown_Previews: PreviewProvider {
     static var previews: some View {
-        TimerCountdown()
+        TimerCountdown(vm: QuizEngineVM())
     }
 }

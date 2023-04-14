@@ -23,7 +23,13 @@ struct ChoiceGridView: View {
                         .background(choice.bgColor)
                         .foregroundColor(.white)
                         .cornerRadius(5)
-                }
+                }.simultaneousGesture(TapGesture().onEnded{
+                    if choice.isCorrect {
+                        vm.gotItCorrect()
+                    } else {
+                        vm.invalidateTimer()
+                    }
+                })
             }
         }
     }

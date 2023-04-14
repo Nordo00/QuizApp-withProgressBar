@@ -18,9 +18,43 @@ class QuizEngineVM: ObservableObject {
     
     @Published var model = QuizEngineVM.createQuizEngine(i: QuizEngineVM.currentQuestion)
     
-    func gotItCorrect() { // increment the number correct
-        QuizEngineVM.numberCorrect += 1
+    // This is for the timer
+    var timer = Timer()
+    @Published var score = 1000 // score per question
+    var totalScore = 0 //keeps track of the total score
+    
+    func startTimer() {
+        self.score = 1000
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: { time in
+            if self.score > 0 {
+                self.score -= 10
+                print("Your current score is \(self.score)")
+            } else {
+                print("Timer done")
+                self.timer.invalidate()
+            }
+        })
+    }
+    
+    func resetQuiz() {
+        self.timer.invalidate()
+        // current question is 0
+        QuizEngineVM.currentQuestion = 0
+        QuizEngineVM.numberCorrect = 0
+        totalScore = 0
         
+    }
+    
+    func invalidateTimer() {
+        self.timer.invalidate()
+    }
+    
+    func gotItCorrect() { // increment the number correct
+        self.timer.invalidate()
+        QuizEngineVM.numberCorrect += 1
+        print("Your total number correct is \(QuizEngineVM.numberCorrect)")
+        totalScore = totalScore + self.score
+        print("Your total score is \(totalScore)")
     }
     
     func howManyCorrect() -> Int { // returns the number correct
@@ -28,8 +62,9 @@ class QuizEngineVM: ObservableObject {
     }
     
     func nextQuestion() {
+        self.timer.invalidate()
         // add to advance to next question
-        // add some logic to make surewe don't go over
+        // add some logic to make sure we don't go over
         QuizEngineVM.currentQuestion += 1
         
         if QuizEngineVM.currentQuestion < QuizEngineVM.quizData.count {

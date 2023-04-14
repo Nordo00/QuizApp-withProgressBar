@@ -17,7 +17,7 @@ struct ContentView: View {
                     .ignoresSafeArea()
                 
                 VStack {
-                    TimerCountdown()
+                    TimerCountdown(vm: vm)
                     
                     ReusableText(text: "Question \(vm.currentQuestion()) of \(vm.totalQuestions())", size:20)
 
@@ -32,6 +32,9 @@ struct ContentView: View {
             }
             .navigationTitle("Wild Turkey Quiz")
             .navigationBarBackButtonHidden(true)
+            .onAppear {
+                vm.startTimer()
+            }
         }
     }
 }
